@@ -13,9 +13,9 @@ flask db init
 Создайте начальную миграцию:
 
 bash
-flask db migrate -m "Initial migration"
+flask db migrate -m "Add user model"
+flask db upgrade
 Примените миграции к базе данных:
 
-bash
-flask db upgrade
+
 

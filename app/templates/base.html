@@ -17,27 +17,29 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     {% if current_user.is_authenticated %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('profile.account') }}">
-                                <i class="bi bi-person-circle"></i> {{ current_user.username }}
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('auth.logout') }}">
-                                <i class="bi bi-box-arrow-right"></i> Выйти
-                            </a>
-                        </li>
+                        {% if current_user.is_authenticated %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            {% if current_user.profile_image %}
+                                <img src="{{ url_for('static', filename=current_user.profile_image.replace('static/', '')) }}"
+                                     class="rounded-circle"
+                                     style="width: 30px; height: 30px; object-fit: cover;">
+                            {% else %}
+                                <i class="bi bi-person-circle"></i>
+                            {% endif %}
+                            {{ current_user.username }}
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{{ url_for('profile.account') }}">Редактировать профиль</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">Выйти</a></li>
+                        </ul>
+                    </li>
+                    {% endif %}
                     {% else %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('auth.login') }}">
-                                <i class="bi bi-box-arrow-in-right"></i> Войти
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('auth.register') }}">
-                                <i class="bi bi-person-plus"></i> Регистрация
-                            </a>
-                        </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('auth.login') }}">Войти</a>
+                    </li>
                     {% endif %}
                 </ul>
             </div>

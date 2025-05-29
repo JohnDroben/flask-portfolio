@@ -9,12 +9,20 @@
             <div class="card shadow">
                 <div class="card-body text-center">
                     <div class="mb-3">
-                        <img src="https://via.placeholder.com/150"
+                        <img src="{{ current_user.profile_image or 'https://via.placeholder.com/150' }}"
                              class="rounded-circle"
-                             alt="Аватар">
+                             alt="Аватар"
+                             style="width: 150px; height: 150px; object-fit: cover;">
                     </div>
                     <h3>{{ current_user.username }}</h3>
                     <p class="text-muted">{{ current_user.email }}</p>
+                    <p class="text-muted small">
+                        {% if current_user.created_at %}
+                            Зарегистрирован: {{ current_user.created_at.strftime('%d.%m.%Y') }}
+                        {% else %}
+                            Дата регистрации: Неизвестно
+                        {% endif %}
+                    </p>
                 </div>
             </div>
         </div>
@@ -22,11 +30,16 @@
         <div class="col-md-8">
             <div class="card shadow">
                 <div class="card-header bg-primary text-white">
-                    <h4 class="mb-0">Настройки профиля</h4>
+                    <h4 class="mb-0">Редактирование профиля</h4>
                 </div>
                 <div class="card-body">
-                    <form method="POST" action="{{ url_for('profile.edit') }}">
+                    <form method="POST" action="{{ url_for('profile.update') }}" enctype="multipart/form-data">
                         {{ form.hidden_tag() }}
+
+                        <div class="mb-3">
+                            <label class="form-label">Аватар профиля</label>
+                            <input type="file" class="form-control" name="profile_image" accept="image/*">
+                        </div>
 
                         <div class="mb-3">
                             {{ form.username.label(class="form-label") }}
@@ -52,18 +65,28 @@
                             {% endif %}
                         </div>
 
+                        <hr>
+
+                        <h5>Смена пароля</h5>
                         <div class="mb-3">
                             {{ form.current_password.label(class="form-label") }}
-                            {{ form.current_password(class="form-control", placeholder="Для смены пароля") }}
+                            {{ form.current_password(class="form-control", placeholder="Введите текущий пароль") }}
                         </div>
 
                         <div class="mb-3">
                             {{ form.new_password.label(class="form-label") }}
-                            {{ form.new_password(class="form-control", placeholder="Новый пароль") }}
+                            {{ form.new_password(class="form-control", placeholder="Введите новый пароль") }}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form.confirm_password.label(class="form-label") }}
+                            {{ form.confirm_password(class="form-control", placeholder="Повторите новый пароль") }}
                         </div>
 
                         <div class="d-grid">
-                            {{ form.submit(class="btn btn-primary") }}
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-save"></i> Сохранить изменения
+                            </button>
                         </div>
                     </form>
                 </div>
