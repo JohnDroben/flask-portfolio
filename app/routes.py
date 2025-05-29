@@ -92,6 +92,20 @@ def edit():
     return render_template('profile/edit.html', form=form)
 
 
+@auth_bp.route('/contacts')
+def contacts():
+    return render_template('contacts.html')
+
+@auth_bp.route('/home')
+def home():
+    return render_template('home.html')
+
+@auth_bp.route('/about')
+def about():
+    return render_template('about.html')
+
+
+
 # Маршруты блога
 blog_bp = Blueprint('blog', __name__)
 
