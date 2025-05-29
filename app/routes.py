@@ -45,7 +45,7 @@ def register():
         user.set_password(form.password.data)
         db.session.add(user)
         db.session.commit()
-        flash('Registration successful!')
+        flash('Регистрация прошла успешно! Теперь вы можете войти.', 'success')
         return redirect(url_for('auth.login'))
     return render_template('auth/register.html', form=form)
 
@@ -62,17 +62,33 @@ profile_bp = Blueprint('profile', __name__)
 
 
 @profile_bp.route('/edit', methods=['GET', 'POST'])
+
+@profile_bp.route('/account')
+
 @login_required
+def account():
+    return render_template('profile/account.html')
+
+
 def edit():
     form = ProfileForm(obj=current_user)
     if form.validate_on_submit():
         current_user.username = form.username.data
         current_user.email = form.email.data
-        if form.new_password.data:
-            current_user.set_password(form.new_password.data)
+        flash('Вы успешно вошли в систему!', 'success')
+
+        if form.current_password.data and form.new_password.data:
+            if current_user.check_password(form.current_password.data):
+                current_user.set_password(form.new_password.data)
+                flash('Пароль успешно изменен', 'success')
+
+            else:
+                flash('Неверный текущий пароль', 'danger')
+                return redirect(url_for('profile.edit'))
+        # Сохранение изменений
         db.session.commit()
-        flash('Your profile has been updated!')
-        return redirect(url_for('profile.edit'))
+        flash('Профиль успешно обновлен', 'success')
+        return redirect(url_for('profile.account'))
     return render_template('profile/edit.html', form=form)
 
 

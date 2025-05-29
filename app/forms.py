@@ -1,26 +1,37 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, TextAreaField
-from wtforms.validators import DataRequired, Email, Optional, Length, EqualTo
+from wtforms import StringField, PasswordField, SubmitField, BooleanField
+from wtforms.validators import DataRequired, Email, EqualTo, Length, ValidationError
+from app.models import User
 
 class LoginForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired()])
-    password = PasswordField('Password', validators=[DataRequired()])
-    submit = SubmitField('Sign In')
+    username = StringField('Имя пользователя', validators=[DataRequired()])
+    password = PasswordField('Пароль', validators=[DataRequired()])
+    remember = BooleanField('Запомнить меня')
+    submit = SubmitField('Войти')
 
 class RegistrationForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired(), Length(min=4, max=20)])
+    username = StringField('Имя пользователя',
+                          validators=[DataRequired(), Length(min=4, max=20)])
     email = StringField('Email', validators=[DataRequired(), Email()])
-    password = PasswordField('Password', validators=[DataRequired()])
-    confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
-    submit = SubmitField('Register')
+    password = PasswordField('Пароль', validators=[DataRequired()])
+    confirm_password = PasswordField('Повторите пароль',
+                             validators=[DataRequired(), EqualTo('password')])
+    submit = SubmitField('Зарегистрироваться')
+
+    def validate_username(self, username):
+        user = User.query.filter_by(username=username.data).first()
+        if user:
+            raise ValidationError('Это имя пользователя уже занято')
+
+    def validate_email(self, email):
+        user = User.query.filter_by(email=email.data).first()
+        if user:
+            raise ValidationError('Этот email уже используется')
 
 class ProfileForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired()])
+    username = StringField('Имя пользователя',
+                          validators=[DataRequired(), Length(min=4, max=20)])
     email = StringField('Email', validators=[DataRequired(), Email()])
-    new_password = PasswordField('New Password', validators=[Optional()])
-    submit = SubmitField('Update Profile')
-
-class PostForm(FlaskForm):
-    title = StringField('Title', validators=[DataRequired(), Length(max=140)])
-    content = TextAreaField('Content', validators=[DataRequired()])
-    submit = SubmitField('Publish')
+    current_password = PasswordField('Текущий пароль')
+    new_password = PasswordField('Новый пароль')
+    submit = SubmitField('Обновить профиль')
