@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4>Редактирование профиля</h4>
+                </div>
+                
+                <div class="card-body">
+                    <form method="POST" enctype="multipart/form-data">
+                        {{ form.hidden_tag() }}
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Имя пользователя</label>
+                            <input type="text" class="form-control" name="username" 
+                                   value="{{ user.username }}" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" name="email" 
+                                   value="{{ user.email }}" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Текущий пароль</label>
+                            <input type="password" class="form-control" 
+                                   name="old_password" placeholder="Для подтверждения изменений">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Новый пароль</label>
+                            <input type="password" class="form-control" 
+                                   name="new_password" placeholder="Оставьте пустым, если не меняется">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Фото профиля</label>
+                            <input type="file" class="form-control" name="photo" 
+                                   accept="image/*">
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                Сохранить изменения
+                            </button>
+                            <a href="{{ url_for('profile') }}" class="btn btn-secondary">
+                                Отмена
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

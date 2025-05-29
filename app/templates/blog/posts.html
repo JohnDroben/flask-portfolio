@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Мой блог{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="form-section mb-5">
+        <h2 class="mb-4">Создать новый пост</h2>
+
+        <form method="POST" action="{{ url_for('blog') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="mb-3">
+                <label for="title" class="form-label">Заголовок</label>
+                <input type="text" class="form-control"
+                       id="title" name="title" required>
+            </div>
+            <div class="mb-3">
+                <label for="body" class="form-label">Содержание</label>
+                <textarea class="form-control" id="body"
+                          name="body" rows="3" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Опубликовать</button>
+        </form>
+    </div>
+
+    <div class="posts-section">
+        <h2 class="mb-4">Последние посты</h2>
+        <div class="row">
+            {% for post in posts %}
+            <div class="col-md-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ post.title }}</h5>
+                        <p class="card-text">{{ post.body }}</p>
+                        <p class="card-text">
+                            <small class="text-muted">
+                                {{ post.created_at.strftime('%d.%m.%Y %H:%M') }}
+                            </small>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}  <!-- Добавлен закрывающий тег цикла -->
+        </div>
+    </div>
+</div>
+{% endblock %}
