@@ -38,10 +38,10 @@ def register():
 
     form = RegistrationForm()
     if form.validate_on_submit():
+        # Создаем пользователя без передачи created_at
         user = User(
             username=form.username.data,
-            email=form.email.data,
-            created_at=datetime.utcnow()  # Добавлено создание даты
+            email=form.email.data
         )
         user.set_password(form.password.data)
         db.session.add(user)
@@ -63,7 +63,7 @@ def login():
             login_user(user)
             flash('Вы успешно вошли в систему!', 'success')
             return redirect(url_for('main.home'))
-        flash('Неверное имя пользователя или пароль', 'danger')
+    flash('Неверное имя пользователя или пароль', 'danger')
     return render_template('auth/login.html', form=form)
 
 
@@ -82,7 +82,9 @@ profile_bp = Blueprint('profile', __name__)
 @profile_bp.route('/account')
 @login_required
 def account():
-    return render_template('profile/account.html')
+    form = ProfileForm(obj=current_user)
+    return render_template('profile/account.html', form=form)
+
 
 
 def allowed_file(filename):
@@ -138,4 +140,4 @@ blog_bp = Blueprint('blog', __name__)
 
 @blog_bp.route('/posts')
 def posts():
-   return redirect(url_for('blog.posts'))
+    return render_template('blog/posts.html')
