@@ -9,12 +9,20 @@
             <div class="card shadow">
                 <div class="card-body text-center">
                     <div class="mb-3">
-                        <img src="https://via.placeholder.com/150"
+                        <img src="{{ current_user.profile_image or url_for('static', filename='images/default.jpg') }}"
                              class="rounded-circle"
-                             alt="Аватар">
+                             alt="Аватар"
+                             style="width: 150px; height: 150px; object-fit: cover;">
                     </div>
                     <h3>{{ current_user.username }}</h3>
                     <p class="text-muted">{{ current_user.email }}</p>
+                    <p class="text-muted small">
+                        {% if current_user.created_at %}
+                            Зарегистрирован: {{ current_user.created_at.strftime('%d.%m.%Y') }}
+                        {% else %}
+                            Дата регистрации: Неизвестно
+                        {% endif %}
+                    </p>
                 </div>
             </div>
         </div>
@@ -22,50 +30,18 @@
         <div class="col-md-8">
             <div class="card shadow">
                 <div class="card-header bg-primary text-white">
-                    <h4 class="mb-0">Настройки профиля</h4>
+                    <h4 class="mb-0">Информация профиля</h4>
                 </div>
                 <div class="card-body">
-                    <form method="POST" action="{{ url_for('profile.edit') }}">
-                        {{ form.hidden_tag() }}
-
-                        <div class="mb-3">
-                            {{ form.username.label(class="form-label") }}
-                            {{ form.username(class="form-control", value=current_user.username) }}
-                            {% if form.username.errors %}
-                                <div class="text-danger">
-                                    {% for error in form.username.errors %}
-                                        <small>{{ error }}</small>
-                                    {% endfor %}
-                                </div>
-                            {% endif %}
-                        </div>
-
-                        <div class="mb-3">
-                            {{ form.email.label(class="form-label") }}
-                            {{ form.email(class="form-control", value=current_user.email) }}
-                            {% if form.email.errors %}
-                                <div class="text-danger">
-                                    {% for error in form.email.errors %}
-                                        <small>{{ error }}</small>
-                                    {% endfor %}
-                                </div>
-                            {% endif %}
-                        </div>
-
-                        <div class="mb-3">
-                            {{ form.current_password.label(class="form-label") }}
-                            {{ form.current_password(class="form-control", placeholder="Для смены пароля") }}
-                        </div>
-
-                        <div class="mb-3">
-                            {{ form.new_password.label(class="form-label") }}
-                            {{ form.new_password(class="form-control", placeholder="Новый пароль") }}
-                        </div>
-
-                        <div class="d-grid">
-                            {{ form.submit(class="btn btn-primary") }}
-                        </div>
-                    </form>
+                    <div class="mb-3">
+                        <strong>Имя пользователя:</strong> {{ current_user.username }}
+                    </div>
+                    <div class="mb-3">
+                        <strong>Email:</strong> {{ current_user.email }}
+                    </div>
+                    <a href="{{ url_for('profile.edit') }}" class="btn btn-primary">
+                        <i class="bi bi-pencil"></i> Редактировать профиль
+                    </a>
                 </div>
             </div>
         </div>
