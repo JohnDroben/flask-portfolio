@@ -38,6 +38,7 @@ def create_app():
     app.register_blueprint(profile_bp)
     app.register_blueprint(blog_bp)
 
+
     # Инициализация базы данных и проверка структуры
     with app.app_context():
         # Создаем таблицы, если их нет
